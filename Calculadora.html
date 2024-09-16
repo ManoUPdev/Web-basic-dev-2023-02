@@ -3,16 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora</title>
+    <title>Calculadora Completa</title>
     <style>
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f4f4f4;
-        font-family: Arial, sans-serif;
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        .calculator {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+            padding: 20px;
+            width: 250px;
+        }
+        .calculator input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            text-align: right;
+            font-size: 1.5em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .calculator button {
+            width: 22%;
+            padding: 15px;
+            font-size: 1.2em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 2px;
+            cursor: pointer;
+        }
+        .calculator button.operator {
+            background-color: #f0ad4e;
+            color: white;
+        }
+        .calculator button.equal {
+            background-color: #5bc0de;
+            color: white;
+            width: 48%;
+        }
+        .calculator button.scientific {
+            background-color: #5bc0de;
+            color: white;
+            width: 22%;
+        }
+        .calculator .mode-toggle {
+            background-color: #f0ad4e;
+            color: white;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <button class="mode-toggle" onclick="toggleMode()">Modo: Padrão</button>
+        <input type="text" id="display" readonly>
+        <div id="basic-buttons">
+            <div>
+                <button onclick="appendNumber('7')">7</button>
+                <button onclick="appendNumber('8')">8</button>
+                <button onclick="appendNumber('9')">9</button>
+                <button class="operator" onclick="appendOperator('/')">/</button>
+            </div>
+            <div>
+                <button onclick="appendNumber('4')">4</button>
+                <button onclick="appendNumber('5')">5</button>
+                <button onclick="appendNumber('6')">6</button>
+                <button class="operator" onclick="appendOperator('*')">*</button>
+            </div>
+            <div>
+                <button onclick="appendNumber('1')">1</button>
+                <button onclick="appendNumber('2')">2</button>
+                <button onclick="appendNumber('3')">3</button>
+                <button class="operator" onclick="appendOperator('-')">-</button>
+            </div>
+            <div>
+                <button onclick="appendNumber('0')">0</button>
+                <button onclick="appendOperator('.')">.</button>
+                <button class="equal" onclick="calculate()">=</button>
+                <button class="operator" onclick="appendOperator('+')">+</button>
+            </div>
+            <button onclick="clearDisplay()">C</button>
+        </div>
+        <div id="scientific-buttons" style="display: none;">
+            <div>
+                <button onclick="appendFunction('Math.sin')">sin</button>
+                <button onclick="appendFunction('Math.cos')">cos</button>
+                <button onclick="appendFunction('Math.tan')">tan</button>
+                <button onclick="appendFunction('Math.sqrt')">√</button>
+            </div>
+            <div>
+                <button onclick="appendFunction('Math.exp')">exp</button>
+                <button onclick="appendFunction('Math.log')">log</button>
+                <button onclick="appendFunction('Math.pow')">pow</button>
+                <button class="operator" onclick="appendOperator('/')">/</button>
+            </div>
+            <div>
+                <button onclick="appendNumber('1')">1</button>
+                <button onclick="appendNumber('2')">2</button>
+                <button onclick="appendNumber('3')">3</button>
+                <button class="operator" onclick="appendOperator('*')">*</button>
+            </div>
+            <div>
+                <button onclick="appendNumber('0')">0</button>
+                <button onclick="appendOperator('.')">.</button>
+                <button class="equal" onclick="calculate()">=</button>
+                <button class="operator" onclick="appendOperator('+')">+</button>
+            </div>
+            <button onclick="clearDisplay()">C</button>
+        </div>
+    </div>
 
+    <script>
+        let isScientific = false;
 
-      }
+        function appendNumber(number) {
+            document.getElementById('display').value += number;
+        }
+
+        function appendOperator(operator) {
+            const display = document.getElementById('display');
+            const lastChar = display.value.slice(-1);
+            if (['+', '-', '*', '/'].includes(lastChar)) {
+                display.value = display.value.slice(0, -1);
+            }
+            display.value += operator;
+        }
+
+        function appendFunction(func) {
+            const display = document.getElementById('display');
+            display.value += func + '(';
+        }
+
+        function calculate() {
+            const display = document.getElementById('display');
+            try {
+                let result = eval(display.value);
+                if (typeof result === 'number') {
+                    display.value = result;
+                } else {
+                    display.value = 'Erro';
+                }
+            } catch (e) {
+                display.value = 'Erro';
+            }
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        function toggleMode() {
+            isScientific = !isScientific;
+            document.getElementById('basic-buttons').style.display = isScientific ? 'none' : 'block';
+            document.getElementById('scientific-buttons').style.display = isScientific ? 'block' : 'none';
+            document.querySelector('.mode-toggle').textContent = isScientific ? 'Modo: Científico' : 'Modo: Padrão';
+        }
+    </script>
+</body>
+</html>
